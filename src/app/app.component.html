@@ -1,0 +1,29 @@
+<section class="app flex-container" fxLayout="column" fxLayoutAlign="start stretch" *ngIf="!isLoading">
+  <mat-sidenav-container fxFlex #container>
+    <mat-sidenav *ngIf="displayNav" class="mat-elevation-z2" #drawer mode="{{isMobileView?'over':'side'}}"
+                 opened="{{!isMobileView}}" disableClose="{{!isMobileView}}">
+      <app-sidebar-menu [system]="system"[systemVersion]="systemVersion"></app-sidebar-menu><!--[clientName]="clientName" -->
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div>
+        <!-- Essa mat-toolbar é usada apenas para a barra de ferramentas superior -->
+        <mat-toolbar color="primary">
+          <button type="button" mat-button (click)="drawer.toggle()" *ngIf="displayNav">
+            <mat-icon>menu</mat-icon>
+          </button>
+          <span style="flex: 1 1 auto;"></span>
+          <div *ngIf="displayNav" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+            <button mat-icon-button aria-label="Alternar auto constraste" (click)="toggleAutoContraste()">
+              <mat-icon aria-hidden="true" matTooltip="Autocontraste">invert_colors</mat-icon>
+            </button>
+              <span style="font-size: 15px" *ngIf="name">{{name}}</span>
+          </div>
+        </mat-toolbar>
+        <mat-progress-bar [style.visibility]="isLoadingRouter ? 'visible' : 'hidden'"
+                          mode="indeterminate">
+        </mat-progress-bar>
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</section>

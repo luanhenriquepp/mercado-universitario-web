@@ -1,0 +1,35 @@
+<mat-card class="detail-card">
+    <app-content-header title="Detalhes do Anúncio">
+        <button mat-raised-button (click)="goBack()">Voltar</button>
+    </app-content-header>
+
+    <div fxLayout="row wrap" fxLayoutAlign="space-between">
+        <div>
+            <h4>Informações do Anúncio</h4>
+        </div>
+    </div>
+
+    <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="40px" fxLayoutAlign="space-between space-between">
+
+        <div class="parent-container" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="start">
+
+            <div>
+                <div *ngIf="advertisement" id="advertisement">
+                    <h5>Titulo</h5>
+                    <span>{{ advertisement.title}}</span>
+                    <h5>Imagem do anúncio</h5>
+                    <img style="width: 300px; height: 300px;" src="{{advertisement.advertisement_photo}}">
+                    <h5>Descrição</h5>
+                    <span>{{ advertisement.ds_advertisement}}</span>
+                    <h5>Preço</h5>
+                    <span>{{ advertisement.price}}</span>
+                    <h5>Categoria</h5>
+                    <span>{{ advertisement.category?.ds_category}}</span>
+                </div>
+            </div>
+        </div>
+        <div fxLayout="row wrap" fxLayout.xs="column wrap" fxLayoutGap="40px"
+             fxLayoutAlign="space-between space-between">
+        </div>
+    </div>
+</mat-card>

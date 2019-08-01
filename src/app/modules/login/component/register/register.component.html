@@ -1,0 +1,230 @@
+<div class="configuration-loading-shade" *ngIf="isLoadingResults">
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div>
+<div class="app-sidebar-container">
+  <div class="app-sidebar-header">
+    <mat-card>
+      <app-content-header title="{{ isUpdate ? 'Editar' : 'CADASTRO' }} DE USUÁRIO">
+        <button mat-raised-button (click)="goBack()">Voltar</button>
+
+      </app-content-header>
+      <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSave()">
+        <mat-horizontal-stepper [linear]="isLinear" #stepper="matHorizontalStepper">
+          <mat-step>
+            <ng-template matStepLabel>Dados Pessoais</ng-template>
+            <div fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px">
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Nome"
+                       formControlName="name"
+                       minlength="5"
+                       maxlength="50" required>
+                <mat-error *ngIf="form.controls['name']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+                <mat-error *ngIf="form.controls['name'].errors?.minlength && form.controls['name'].dirty ||
+                  form.controls['name'].errors?.maxlength && form.controls['name'].dirty ">
+                  O campo deve conter no mínimo <strong>5</strong> e no máximo <strong>150</strong> caracteres.
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput
+                       [matDatepicker]="birth" placeholder="Data de Nascimento" readonly="readonly"
+                       formControlName="birth" required>
+                <mat-datepicker-toggle matSuffix [for]="birth"></mat-datepicker-toggle>
+                <mat-datepicker #birth></mat-datepicker>
+                <mat-error *ngIf="form.controls['birth']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Matrícula"
+                       [textMask]="{mask: mask.MATRICULA}"
+                       [appUnmask]="mask.UNMASK_NUMBER"
+                       formControlName="registration" required>
+                <mat-error *ngIf="form.controls['registration']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="CPF" formControlName="cpf"
+                       [textMask]="{mask: mask.CPF}"
+                       [appUnmask]="mask.UNMASK_NUMBER" required>
+                <mat-error *ngIf="form.controls['cpf']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+                <mat-error *ngIf="form.controls['cpf'].errors?.cpfValidation && form.controls['cpf'].dirty">
+                  Por favor informe um CPF <strong>válido</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="RG"
+                       [textMask]="{mask: mask.RG}"
+                       [appUnmask]="mask.UNMASK_NUMBER"
+                       formControlName="rg" required>
+                <mat-error *ngIf="form.controls['rg']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <div fxFlex="calc(50% - 25px)">
+                <br>
+                <span style="font-size: 13px">Foto de perfil</span>
+                <input type="file" accept="image/*" (change)="changeListener($event)" required>
+              </div>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input type="password" matInput placeholder="Senha"
+                       formControlName="password" required>
+                <mat-error *ngIf="form.controls['password']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input type="password" matInput placeholder="Confirmação da Senha"
+                       formControlName="password_confirmation" required>
+                <mat-error *ngIf="form.controls['password_confirmation']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="E-mail" formControlName="email" required>
+                <mat-hint>Exemplo: exemplo@exemplo.com</mat-hint>
+                <mat-error *ngIf="form.controls['email']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+                <mat-error *ngIf="form.controls['email']?.errors?.email && form.controls['email'].dirty">
+                  Por favor informe um e-mail <strong>válido</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Número de Celular"
+                       [textMask]="{mask: mask.TELEFONE}"
+                       formControlName="phone_number"
+                       [appUnmask]="mask.UNMASK_NUMBER" required>
+                <mat-error *ngIf="form.controls['phone_number']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <button mat-button matStepperNext type="button">Próximo</button>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Endereço</ng-template>
+            <div fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px">
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <mat-select placeholder="Estados"
+                            formControlName="cd_state"
+                            (selectionChange)="getCityByUf(form.controls['cd_state'].value)" required>
+                  <mat-option *ngFor="let state of stateList.allState" [value]="state.cd_state">
+                    {{state.state_name}} - {{state.initials}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['cd_state']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <mat-select placeholder="Cidades"
+                            formControlName="cd_city" required>
+                  <mat-option *ngFor="let city of cityList.allCities" [value]="city.cd_city">
+                    {{city.city_name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['cd_city']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Cep"
+                       [textMask]="{mask: mask.CEP}"
+                       [appUnmask]="mask.UNMASK_NUMBER"
+                       (blur)="findCep(form.controls['cep'].value)"
+                       formControlName="cep" required>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Bairro" formControlName="neighborhood" required>
+                <mat-error *ngIf="form.controls['neighborhood']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Logradouro" formControlName="public_place" required>
+                <mat-error *ngIf="form.controls['public_place']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Número da Casa" formControlName="number" maxlength="3" required>
+                <mat-error *ngIf="form.controls['number']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <input matInput placeholder="Complemento" maxlength="100"
+                       minlength="5"
+                       formControlName="complement">
+                <mat-error *ngIf="form.controls['complement'].errors?.minlength && form.controls['complement'].dirty ||
+                  form.controls['complement'].errors?.maxlength && form.controls['complement'].dirty ">
+                  O campo deve conter no mínimo <strong>5</strong> e no máximo <strong>255</strong> caracteres.
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <button mat-button matStepperPrevious type="button">Anterior</button>
+              <button mat-button matStepperNext type="button">Próximo</button>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Dados escolares</ng-template>
+            <div fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px">
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <mat-select placeholder="Semestre" formControlName="semester" required>
+                  <mat-option *ngFor="let semesterList of semesterList" [value]="semesterList.label">
+                    {{semesterList.label}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['semester']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <mat-select placeholder="Nome da Faculdade" formControlName="university_name" required>
+                  <mat-option *ngFor="let universityNameList of universityNameList"
+                              [value]="universityNameList.label">
+                    {{universityNameList.label}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['university_name']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="calc(50% - 25px)">
+                <mat-select placeholder="Curso" formControlName="course" required>
+                  <mat-option *ngFor="let courseList of courseList" [value]="courseList.label">
+                    {{courseList.label}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['course']?.errors?.required">
+                  O campo é de preenchimento <strong>obrigatório</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div>
+              <button mat-button matStepperPrevious type="button">Anterior</button>
+              <button mat-button matStepperNext type="button">Próximo</button>
+            </div>
+          </mat-step>
+          <mat-step>
+
+            <ng-template matStepLabel>Finalizar</ng-template>
+            Cadastro concluído, favor finalizar!
+            <div>
+              <button mat-button matStepperPrevious type="button">Anterior</button>
+              <button mat-button type="submit">Salvar</button>
+            </div>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </form>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<mat-card>
+  <app-content-header title="Alterar Perfil de Usuário">
+  </app-content-header>
+
+  <mat-card-content>
+
+    <mat-list role="list" class="docs-markdown">
+      <mat-list-item> Tipo de Perfil: {{ perfil.id_perfil === 1 ? ' Gestor ' : ' Usuário ' }}<br>
+        <mat-icon *ngIf="perfil.id_perfil === 1">person</mat-icon>
+        <mat-icon *ngIf="perfil.id_perfil === 2">group</mat-icon>
+      </mat-list-item>
+    </mat-list>
+
+    <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSubmit()">
+      <mat-card-actions>
+        <mat-list role="list" class="docs-markdown">
+          <mat-list-item>Alterar Perfil:</mat-list-item>
+          <mat-list-item *ngIf="perfil.id_perfil === 2">
+          <mat-checkbox (change)="checkBoxChange($event) || changeManagement($event)" value="gestor">
+            Gestor
+            <br>
+          </mat-checkbox>
+            <mat-icon *ngIf="perfil.id_perfil === 2">person</mat-icon>
+          </mat-list-item>
+          <mat-list-item *ngIf="perfil.id_perfil === 1">
+            <mat-checkbox (change)="checkBoxChange($event) || changeUser($event)" value="usuario">
+              Usuário
+              <br>
+            </mat-checkbox>
+            <mat-icon *ngIf="perfil.id_perfil === 1">group</mat-icon>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-actions>
+
+      <div fxLayout="row" fxLayoutAlign="flex-end">
+        <div>
+          <button mat-raised-button (click)="goBack()">Voltar</button>
+          <button mat-raised-button color="primary" [disabled]="contentDisable">
+            Enviar
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+  </mat-card-content>
+</mat-card>

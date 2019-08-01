@@ -1,0 +1,43 @@
+<div class="app-sidebar-container">
+  <div class="app-sidebar-header">
+  </div>
+
+  <mat-card>
+    <mat-card-title>
+      <img style="width: 330px" src="{{imageSrc}}"/>
+    </mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" novalidate class="app-form" (submit)="login()">
+        <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="10px">
+          <mat-form-field fxFlex="calc(50% - 25px)">
+            <input matInput type="text" placeholder="Matrícula" formControlName="registration">
+            <span matPrefix>
+              <mat-icon>person</mat-icon>
+            </span>
+            <mat-error *ngIf="form.controls['registration'].errors?.required">
+              Informe sua matrícula
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="calc(50% - 25px)">
+            <input matInput type="password" placeholder="Senha" formControlName="password" autocomplete="off">
+            <span matPrefix>
+              <mat-icon>lock</mat-icon>
+            </span>
+            <mat-error *ngIf="form.controls['password'].errors?.required">
+              Informe sua senha
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="button-row">
+          <div fxLayoutAlign="flex-end" fxFlexAlign="flex-end">
+            <button mat-button color="primary" type="submit">Entrar</button>
+            <button mat-button color="primary" routerLink="/register">Cadastrar</button>
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

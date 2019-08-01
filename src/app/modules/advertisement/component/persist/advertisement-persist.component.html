@@ -1,0 +1,85 @@
+<div class="configuration-loading-shade" *ngIf="isLoadingResults">
+  <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div>
+
+<mat-card>
+  <app-content-header title="{{ isUpdate ? 'Editar' : 'Cadastro' }} de Anúncio">
+    <button mat-raised-button (click)="goBack()">Voltar</button>
+  </app-content-header>
+
+
+  <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSave()">
+
+    <div fxLayout="column" fxLayoutAlign="start">
+
+      <!--Titulo-->
+      <mat-form-field fxFlex="calc(50% - 25px)">
+        <input matInput placeholder="Titulo" maxlength="150"
+               formControlName="title">
+        <mat-error *ngIf="form.controls['title'].errors?.required">
+          O campo é de preenchimento <strong>obrigatório!</strong>
+        </mat-error>
+        <mat-error *ngIf="form.controls['title'].errors?.minlength && form.controls['title'].dirty ||
+                form.controls['title'].errors?.maxlength && form.controls['title'].dirty ">
+          O campo deve conter no mínimo <strong>5</strong> e no máximo <strong>255</strong> caracteres.
+        </mat-error>
+      </mat-form-field>
+
+      <!--Descrição-->
+      <mat-form-field fxFlex="calc(50% - 25px)">
+        <textarea matInput placeholder="Descrição" maxlength="150"
+               formControlName="ds_advertisement">
+        </textarea>
+        <mat-error *ngIf="form.controls['ds_advertisement'].errors?.required">
+          O campo é de preenchimento <strong>obrigatório!</strong>
+        </mat-error>
+        <mat-error *ngIf="form.controls['ds_advertisement'].errors?.minlength && form.controls['ds_advertisement'].dirty ||
+                form.controls['ds_advertisement'].errors?.maxlength && form.controls['ds_advertisement'].dirty ">
+          O campo deve conter no mínimo <strong>5</strong> e no máximo <strong>255</strong> caracteres.
+        </mat-error>
+      </mat-form-field>
+
+      <!--Preço do produto-->
+      <mat-form-field fxFlex="calc(50% - 25px)">
+        <input placeholder="Preço do produto:"
+               currencyMask min="1" max="999999" [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
+               matInput="price"
+               formControlName="price">
+        <mat-error *ngIf="form.controls['price'].errors?.required">
+          O campo é de preenchimento <strong>obrigatório!</strong>
+        </mat-error>
+        <mat-error *ngIf="form.controls['price'].errors?.min && form.controls['price'].dirty ||
+                form.controls['price'].errors?.max && form.controls['price'].dirty ">
+          O preço não pode ser menor que <strong>1 R$</strong> e nem maior que <strong>999999 R$</strong>.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="32%">
+        <mat-select placeholder="Categoria"
+                    formControlName="cd_category">
+          <mat-option *ngFor="let categoria of optionsList.todascategorias" [value]="categoria.cd_category">
+              {{categoria.ds_category}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.controls['cd_category'].errors?.required">
+          O campo é de preenchimento <strong>obrigatório!</strong>
+        </mat-error>
+      </mat-form-field>
+
+      <div fxFlex="calc(50% - 25px)">
+        <span style="font-size: 15px">Foto do Aúncio</span>
+        <br>
+        <input  type="file" accept="image/*" (change)="changeListener($event)">
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="flex-end">
+      <div class="app-margin-right">
+        <button type="button" mat-raised-button (click)="goBack()">Cancelar</button>
+      </div>
+      <div>
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+      </div>
+    </div>
+  </form>
+</mat-card>

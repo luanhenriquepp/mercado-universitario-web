@@ -1,0 +1,14 @@
+<div fxLayoutAlign="space-around" fxLayout="column">
+  <mat-tab-group fxFlex="1">
+    <mat-tab label="Avisos">
+      <div [innerHTML]="loginInfo.aviso"></div>
+    </mat-tab>
+    <mat-tab label="Ajuda">
+      <div [innerHTML]="loginInfo.ajuda"></div>
+    </mat-tab>
+    <mat-tab label="Versão do Sistema">
+      <div [innerHTML]="loginInfo.version"></div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+

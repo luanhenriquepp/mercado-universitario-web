@@ -1,0 +1,46 @@
+<div class="configuration-loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div>
+<mat-card>
+    <mat-card-content class="card-content">
+        <mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="userInformations">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Informações do Usuário</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <strong>Nome:</strong> {{ row.user?.name }}
+                    <br>
+                    <img style="width: 180px; height: 150px; border-radius: 50%;" src="{{row.user?.user_photo}}">
+                    <br>
+                    <strong>Bairro:</strong> {{ row.user?.address?.neighborhood }}
+                    <br>
+                    <strong>Faculdade:</strong> {{ row.user?.universities?.university_name }}
+                    <br>
+                    <strong>Logradouro:</strong> {{row.user?.address.public_place}}
+                    <br>
+                    <strong>Telefone:</strong> {{row.user?.phone_number}}
+                    <br>
+                    <strong>E-mail Contato:</strong> {{row.user?.email}}
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="advertisementInformation">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Informações do Anúncio</mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                    <strong>Titulo:</strong> {{ row.title}}
+                    <br>
+                    <img style="width: 180px; height: 150px; border-radius: 50%;" src="{{row.advertisement_photo}}">
+                    <br>
+                    <strong>Preço:</strong> {{ row.price}} R$
+                    <br>
+                    <strong>Descrição:</strong> {{row.ds_advertisement}}
+                    <br>
+                    <strong>Categoria:</strong> {{row.category?.ds_category}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></mat-row>
+        </mat-table>
+        <mat-paginator [length]="resultsLength" [pageSize]="pageSize" [pageIndex]="pageIndex"></mat-paginator>
+    </mat-card-content>
+</mat-card>
+
+

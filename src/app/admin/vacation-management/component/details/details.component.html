@@ -1,0 +1,59 @@
+<mat-card>
+  <mat-card-content>
+    <app-content-header title=" Detalhes da Solicitação">
+      <button mat-raised-button (click)="goBack()">Voltar</button>
+    </app-content-header>
+
+    <mat-list role="list" class="docs-markdown">
+      <mat-list-item> Usuário: {{ ferias.usuario.login }}</mat-list-item>
+      <mat-list-item> Nome: {{ ferias.usuario.name }}</mat-list-item>
+      <mat-list-item> Status: {{ ferias.status.status }}</mat-list-item>
+      <mat-list-item *ngIf="ferias.justificativa_gestor">
+        Justificativa: {{ ferias.justificativa_gestor }}
+      </mat-list-item>
+
+      <mat-list-item *ngIf="ferias.abono">
+        Abono: Sim
+      </mat-list-item>
+    </mat-list>
+
+
+    <mat-list role="list" *ngFor="let periodo of ferias.periodos; let i = index ">
+      <h3 mat-subheader>{{ i + 1 }}° Período</h3>
+      <mat-list-item>
+        {{ i + 1 }} - Data Inicial: {{ periodo.data_inicial | date: 'dd/MM/yyyy' }} -
+        Data Final: {{periodo.data_final | date: 'dd/MM/yyyy'}}
+      </mat-list-item>
+    </mat-list>
+    <mat-list>
+      <mat-list-item *ngIf="ferias.justificativa_usuario">Justificativa de Férias Emergenciais: {{
+        ferias.justificativa_usuario }}
+      </mat-list-item>
+    </mat-list>
+    <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSubmit()"
+          *ngIf="ferias.status.status == 'Aguardando Aprovação'">
+      <mat-card-actions>
+        <mat-radio-group formControlName="status">
+          <mat-radio-button value="APR" (change)="aprova($event)"> Aprovar</mat-radio-button>
+          <mat-radio-button value="RPV" (change)="reprova($event)"> Reprovar</mat-radio-button>
+        </mat-radio-group>
+      </mat-card-actions>
+      <mat-error *ngIf="!form.value">Campo de preenchimento obrigatório</mat-error>
+      <div *ngIf="form.get('status').value == 'RPV'">
+        <mat-form-field>
+          <textarea matInput placeholder="Justificativa" formControlName="justificativa_gestor"></textarea>
+          <mat-error *ngIf="form.controls['justificativa_gestor'].errors?.required">
+            Preenchimento obrigatório
+          </mat-error>
+          <mat-error *ngIf="form.controls['justificativa_gestor'].errors?.minlength">
+            Justificativa deve ter no mínimo 30 carácteres
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <mat-divider></mat-divider>
+      <div><br>
+        <button mat-raised-button color="primary"> Enviar</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

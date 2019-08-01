@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-card-content>
+    <app-content-header title=" Detalhes da Solicitação">
+      <button mat-raised-button (click)="goBack()">Voltar</button>
+    </app-content-header>
+
+    <mat-list role="list" class="docs-markdown">
+      <mat-list-item> Usuário: {{ ferias.usuario.login }}</mat-list-item>
+      <mat-list-item> Nome: {{ ferias.usuario.name }}</mat-list-item>
+      <mat-list-item *ngIf="ferias.abono"> Abono: Sim</mat-list-item>
+      <mat-list-item *ngIf="ferias.justificativa_usuario"> Justificativa Férias De Emergência: {{
+        ferias.justificativa_usuario }}
+      </mat-list-item>
+      <mat-list-item> Status: {{ ferias.status.status }}</mat-list-item>
+      <mat-list-item *ngIf="ferias.justificativa_gestor"> Justificativa Gestor: {{ ferias.justificativa_gestor }}
+      </mat-list-item>
+    </mat-list>
+
+    <mat-list role="list" *ngFor="let periodo of ferias.periodos; let i = index ">
+      <h3 mat-subheader>{{ i + 1 }}º Período </h3>
+      <mat-list-item> {{ i + 1 }} - Data Inicial: {{ periodo.data_inicial | date: 'dd/MM/yyyy' }} - Data Final: {{
+        periodo.data_final | date: 'dd/MM/yyyy'}}
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

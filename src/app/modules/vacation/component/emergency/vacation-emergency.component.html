@@ -1,0 +1,85 @@
+<app-loading [display]="isLoading"></app-loading>
+<mat-card>
+  <app-content-header title="{{ isUpdate ? 'Editar' : 'Adicionar' }} Solicitação de Férias Emergenciais">
+    <button mat-raised-button (click)="goBack()">Voltar</button>
+  </app-content-header>
+
+  <form [formGroup]="form" novalidate class="app-form" (ngSubmit)="onSave()">
+
+    <mat-card-subtitle>
+      Dias informados: {{calcTotalDias()}} dias
+    </mat-card-subtitle>
+
+    <div fxLayout="column" fxLayoutAlign="start">
+
+      <div formArrayName="periodos" fxFlex="100" fxLayout fxLayout.xs="column" fxLayoutWrap fxLayoutGap="25px"
+           *ngFor="let item of getListPeriod().controls; let i = index;">
+        <div [formGroupName]="i" *ngIf="displayItem(item, i)">
+
+          <mat-form-field fxFlex="calc(50% - 25px)">
+            <input placeholder="Período de Inicio" matInput [matDatepicker]="data_inicial"
+                   formControlName="data_inicial" [min]="getDataInicialMinima(item, i)" readonly>
+            <mat-datepicker-toggle matSuffix [for]="data_inicial"></mat-datepicker-toggle>
+            <mat-datepicker #data_inicial></mat-datepicker>
+            <mat-error *ngIf="item.get('data_inicial').hasError('required')">
+              Preenchimento obrigatório
+            </mat-error>
+            <mat-error *ngIf="item.get('data_inicial').hasError('invalidDate')">
+              {{item.get('data_inicial').errors.invalidDate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field fxFlex="calc(50% - 25px)">
+            <input placeholder="Período de Fim" matInput [matDatepicker]="data_final" formControlName="data_final"
+                   [min]="getDataFinalMinima(item, i)" [disabled]="disableDate()" readonly>
+            <mat-datepicker-toggle matSuffix [for]="data_final"></mat-datepicker-toggle>
+            <mat-datepicker #data_final></mat-datepicker>
+            <mat-error *ngIf="item.get('data_final').hasError('invalidDate')">
+              {{item.get('data_final').errors.invalidDate}}
+            </mat-error>
+            <mat-error *ngIf="item.get('data_inicial').hasError('required')">
+              Preenchimento obrigatório
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div
+          *ngIf="(calcTotalDias() === 20) || (this.form.get('abono').value)">
+        <mat-checkbox (change)="sell($event)" formControlName="abono">Vender Abono</mat-checkbox>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <textarea matInput placeholder="Justifique o motivo da solicitação emergencial" formControlName="justificativa_usuario"></textarea>
+          <mat-error *ngIf="form.controls['justificativa_usuario'].errors?.required">
+            Preenchimento obrigatório
+          </mat-error>
+          <mat-error *ngIf="form.controls['justificativa_usuario'].errors?.minlength">
+            Justificativa deve ter no mínimo 30 carácteres
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="flex-end">
+        <div class="app-margin-right">
+          <button type="button" mat-raised-button (click)="goBack()">Cancelar</button>
+        </div>
+        <div>
+          <button mat-raised-button color="primary" type="submit" (disabled)="disableSave()">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <mat-error *ngIf="(calcTotalDias() !== diasDisponiveis)">
+        <!--<mat-error *ngIf="diasDisponiveis - calcTotalDias() > 0">-->
+        <!--{{ diasDisponiveis - calcTotalDias() }} dia(s) disponíveis-->
+        <!--</mat-error>-->
+        <mat-error *ngIf="diasDisponiveis - calcTotalDias() < 0">
+          O somatório dos períodos devem ser de 30 dias!
+        </mat-error>
+      </mat-error>
+    </div>
+  </form>
+</mat-card>

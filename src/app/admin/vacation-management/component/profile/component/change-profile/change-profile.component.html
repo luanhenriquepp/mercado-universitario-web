@@ -1,0 +1,48 @@
+<mat-card>
+  <mat-form-field>
+    <mat-select placeholder="Tipos de Usuários" (change)="applyFilter($event)" [(ngModel)]="filter">
+      <mat-option *ngFor="let filtro of filtros" [value]="filtro.id_perfil">
+        {{filtro.label}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-card-content class="card-content-list">
+
+    <mat-table #table [dataSource]="dataSource" class="configuration-table" *ngIf="!isLoadingResults"
+               matSort matSortActive="created"
+               matSortDisableClear
+               matSortDirection="asc">
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Usuários</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.usuarios?.name}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="perfil">
+        <mat-header-cell *matHeaderCellDef>Perfil</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{ row.perfil?.perfil}}
+          <mat-icon *ngIf="row.perfil.perfil === 'Gestor'">person</mat-icon>
+          <mat-icon *ngIf="row.perfil.perfil === 'Usuario'">group</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="action"> <!-- algo como matColumnDef="id_perfil" -->
+        <mat-header-cell *matHeaderCellDef>Ajustes</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <a mat-button routerLink="edit/{{row.id}}">
+            <mat-icon>build</mat-icon>
+          </a>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></mat-row>
+    </mat-table>
+
+    <mat-paginator [length]="resultsLength" [pageSize]="pageSize" [pageIndex]="pageIndex"></mat-paginator>
+  </mat-card-content>
+</mat-card>
+
+

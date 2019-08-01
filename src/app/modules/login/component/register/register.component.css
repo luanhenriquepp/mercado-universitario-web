@@ -1,0 +1,25 @@
+.mat-card {
+  width: 900px;
+  height: 500px;
+  padding: 0px;
+}
+
+.mat-card-content, .mat-card-title {
+  padding: 20px;
+}
+
+.mat-card-content {
+  padding-top: 0px;
+}
+
+.mat-card-title {
+  background: #102027;
+}
+
+form {
+  padding: 0px;
+}
+
+.login {
+  margin-top: 100px;
+}

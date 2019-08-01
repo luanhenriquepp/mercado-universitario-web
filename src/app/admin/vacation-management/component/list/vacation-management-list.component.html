@@ -1,0 +1,85 @@
+<app-loading [display]="isLoadingResults || isSendAction"></app-loading>
+<mat-card>
+  <app-content-header title="Solicitações de Férias">
+    <mat-form-field>
+      <mat-select placeholder="Filtro" (change)="applyFilter($event)" [(ngModel)]="filter">
+        <mat-option *ngFor="let filtro of filtros" [value]="filtro.id_status">
+          {{filtro.label}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </app-content-header>
+
+  <mat-card-content class="card-content-list">
+
+    <mat-table #table [dataSource]="dataSource" class="configuration-table" *ngIf="!isLoadingResults"
+               matSort matSortActive="created"
+               matSortDisableClear
+               matSortDirection="asc">
+
+      <!-- registration Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>Usuário</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row.usuario.login }}</mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="id_usuario">
+        <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row.usuario.name }}</mat-cell>
+      </ng-container>
+
+
+      <!-- Period Column -->
+      <ng-container matColumnDef="id_ferias">
+        <mat-header-cell *matHeaderCellDef>Períodos</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <div *ngFor="let periodo of row.periodos">
+            {{periodo.data_inicial |date: 'dd/MM/yyyy'}} - {{periodo.data_final |date: 'dd/MM/yyyy'}}
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Allowance Column -->
+      <ng-container matColumnDef="abono">
+        <mat-header-cell *matHeaderCellDef>Abono</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <div>
+            {{row.abono? 'Sim' : 'Não'}}
+          </div>
+        </mat-cell>
+      </ng-container>
+      <!-- Actions Column -->
+      <ng-container matColumnDef="id_status">
+        <mat-header-cell *matHeaderCellDef>Ações</mat-header-cell>
+
+        <mat-cell *matCellDef="let row">
+          <mat-chip-list>
+            <div *ngIf="row.status.status !== 'Aguardando Aprovação'">
+              <a mat-menu-item routerLink="details/{{row.id}}">
+                <mat-icon matTooltip="Visualizar">visibility</mat-icon>
+              </a>
+            </div>
+            <div *ngIf="row.status.status === 'Aguardando Aprovação'">
+            <a mat-button routerLink="details/{{row.id}}">
+          <mat-icon matTooltip="Responder">reply</mat-icon></a>
+            </div>
+            <div *ngIf="row.status.status === 'Aprovado' || row.status.status === 'Reprovado'">
+              <a mat-menu-item routerLink="edit/{{row.id}}">
+                <mat-icon matTooltip="Cancelar">cancel</mat-icon>
+              </a>
+            </div>
+          </mat-chip-list>
+        </mat-cell>
+
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;" class="mat-row"></mat-row>
+    </mat-table>
+
+    <mat-paginator [length]="resultsLength" [pageSize]="pageSize" [pageIndex]="pageIndex"></mat-paginator>
+  </mat-card-content>
+</mat-card>
+

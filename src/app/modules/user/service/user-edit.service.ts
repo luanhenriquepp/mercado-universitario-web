@@ -6,7 +6,6 @@ import {HttpDataAbstract} from '../../../shared/abstract/http-data.abstract';
 import {State, UserEditInterface} from '../interface/user-edit.interface';
 import {Cities} from '../../login/component/register/interface/state.interface';
 import {API_BASE} from '../../../app.constants';
-import {Advertisement} from '../../advertisement/interface/advertisement.interface';
 
 
 @Injectable()
@@ -16,7 +15,7 @@ export class UserEditService extends HttpDataAbstract<UserEditInterface> {
   }
 
   getCurrentUser(): Observable<any> {
-    return this.http.get<any>(`${API_BASE}/current/user`);
+    return this.http.get<any>(`${API_BASE}/current-user`);
   }
   getAllStates(): Observable<Array<State>> {
     return this.http.get<Array<State>>(`${API_BASE}/state`);

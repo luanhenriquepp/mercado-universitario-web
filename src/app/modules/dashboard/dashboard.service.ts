@@ -12,9 +12,9 @@ import {Advertisement} from './dashboard.interface';
 export class DashboardService extends HttpDataAbstract<Advertisement> {
 
     constructor(protected http: HttpClient) {
-        super(http, 'public-page');
+        super(http, 'advertisement/public-page');
     }
     getAll(page: string, search?: string): Observable<Paginator<Advertisement>> {
-        return this.http.get<Paginator<Advertisement>>(`${API_BASE}/public-page`, {params: {page}});
+        return this.http.get<Paginator<Advertisement>>(`${API_BASE}/advertisement/public-page`, {params: {page}});
     }
 }
